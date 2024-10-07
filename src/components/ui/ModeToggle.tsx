@@ -22,9 +22,9 @@ export function ModeToggle() {
       onClick={() => (theme === 'dark' ? setTheme('light') : setTheme('dark'))}
       variant='ghost'
       size='icon'
+      className='text-zinc-50 dark:text-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-200 fill-current'
     >
-      {theme === 'dark' ? <SunIcon className='size-4 rotate-45' /> : <Moon className='size-4' />}
-      <span className='sr-only'>Toggle theme</span>
+      {theme === 'dark' ? <SunIcon className='size-4 rotate-45 ' /> : <Moon className='size-4  ' />}
     </Button>
   );
 }
