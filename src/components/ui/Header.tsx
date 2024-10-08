@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from './button';
-import { ModeToggle } from './ModeToggle';
+import { ModeToggle } from './mode-toggle';
 
 import { SearchForm } from './search-form';
 
@@ -13,23 +13,23 @@ const transportModes = [
 
 const Header = () => {
   return (
-    <div className="p-4 sm:p-6 md:p-8">
-      <header className='relative bg-[url("/background.jpg")] bg-cover bg-center px-8 sm:px-16 md:px-24 lg:px-32 xl:px-52 py-8 border-b-2 rounded-lg shadow-xl'>
+    <div className='p-4 sm:p-6 md:p-8'>
+      <header className='relative bg-[url("/background.jpg")] bg-cover bg-center px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 py-6 sm:py-8 border-b-2 rounded-lg shadow-xl'>
         <div className='absolute inset-0 bg-black/70 rounded-lg dark:bg-white/70'></div>
         <div className='relative z-10'>
-          <div className='flex justify-between items-center'>
+          <div className='flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0'>
             <div className='flex-shrink-0'>
               <Link
                 href='/'
                 className='text-2xl font-bold text-zinc-50'
               >
-                <h1 className='text-4xl sm:text-5xl text-zinc-50 font-extrabold tracking-tight dark:text-zinc-900'>
+                <h1 className='text-3xl sm:text-4xl md:text-5xl text-zinc-50 font-extrabold tracking-tight dark:text-zinc-900'>
                   Viterr.
                 </h1>
               </Link>
             </div>
 
-            <nav className='hidden md:flex space-x-8 bg-zinc-100/50 py-3 px-6 rounded-full shadow-inner dark:bg-zinc-800/50 '>
+            <nav className='flex flex-wrap justify-center sm:justify-end space-x-4 sm:space-x-6 md:space-x-8 bg-zinc-100/50 py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-inner dark:bg-zinc-800/50 w-full sm:w-auto'>
               {['Home', 'About', 'Services', 'Contact'].map((item) => (
                 <Link
                   key={item}
@@ -41,7 +41,7 @@ const Header = () => {
               ))}
             </nav>
 
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-4 mt-4 sm:mt-0'>
               <ModeToggle />
               <Button
                 variant='ghost'
@@ -56,19 +56,19 @@ const Header = () => {
               Trouver le trajet le plus adapté à vos besoins
             </h2>
             <p className='text-xl sm:text-2xl font-light max-w-3xl mx-auto'>
-              Combinant les moyens de transports que vous souhaitez pour vous assurer le prix le plus
-              bas.
+              Combinant les moyens de transports que vous souhaitez pour vous assurer le prix le
+              plus bas.
             </p>
           </div>
           <SearchForm />
-          <div className='translate-y-[90px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mx-auto w-full items-stretch justify-center relative mt-24'>
+          <div className='translate-y-[90px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 items-stretch justify-center relative mt-12 sm:mt-16 lg:mt-24'>
             {transportModes.map((mode) => (
               <div
                 key={mode.name}
-                className='py-6 flex flex-col bg-zinc-50 dark:bg-zinc-700 rounded-xl shadow-lg dark:text-zinc-50 dark:shadow-zinc-600 transition-all duration-300 hover:shadow-xl hover:scale-105 overflow-hidden'
+                className='py-4 sm:py-6 flex flex-col bg-zinc-50 dark:bg-zinc-700 rounded-xl shadow-lg dark:text-zinc-50 dark:shadow-zinc-600 transition-all duration-300 hover:shadow-xl hover:scale-105 overflow-hidden'
               >
-                <h2 className='text-center font-light px-8  text-4xl '>{mode.name}</h2>
-                <p className='text-center text-lg font-light text-zinc-400 px-4  flex-grow flex items-center justify-center'>
+                <h2 className='text-center font-light px-4 sm:px-6 lg:px-8 text-2xl sm:text-3xl lg:text-4xl'>{mode.name}</h2>
+                <p className='text-center text-base sm:text-lg font-light text-zinc-400 px-2 sm:px-4 mt-2 sm:mt-4 flex-grow flex items-center justify-center'>
                   {mode.description}
                 </p>
               </div>
