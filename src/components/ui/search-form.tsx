@@ -275,9 +275,10 @@ export function SearchForm() {
           onClick={handleDateClick}
           onBlur={handleDateBlur}
           className={cn(
-            "w-full justify-start rounded-full border-zinc-900/30 pl-6 text-left text-base font-medium text-zinc-900 hover:bg-transparent hover:text-zinc-700 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 dark:hover:text-zinc-300 lg:h-full lg:flex-1 lg:rounded-none",
+            "w-full justify-start rounded-full border-zinc-900/30 pl-6 text-left text-base font-medium text-zinc-900 hover:bg-transparent hover:text-zinc-700 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 lg:h-full lg:flex-1 lg:rounded-none",
             !date && "font-light",
-            isCalendarOpen && "rounded-t-[20px] bg-white dark:bg-zinc-900",
+            isCalendarOpen &&
+              "hover:bg-zinc-white rounded-t-[20px] bg-white dark:bg-zinc-900",
           )}
         >
           <CalendarIcon className="mr-4 size-4 text-zinc-900 dark:text-zinc-50" />
@@ -308,7 +309,7 @@ export function SearchForm() {
       <Button
         type="submit" // Changez le type en "submit"
         variant={"outline"}
-        className="w-full rounded-full border-none bg-zinc-50 text-base font-semibold text-zinc-900 shadow-md transition-colors hover:bg-zinc-200 focus:outline-none focus:ring-0 dark:bg-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-600 lg:mr-3 lg:h-3/4 lg:w-auto lg:px-6"
+        className="ml-2 w-full rounded-full border-none bg-zinc-200 text-base font-semibold text-zinc-900 shadow-md transition-colors hover:bg-white focus:outline-none focus:ring-0 dark:bg-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900 lg:mr-3 lg:h-3/4 lg:w-auto lg:px-6"
       >
         Rechercher
       </Button>
