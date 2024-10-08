@@ -13,8 +13,8 @@ const transportModes = [
 
 const Header = () => {
   return (
-    <div className="p-4 sm:p-6 md:p-8">
-      <header className='relative rounded-lg border-b-2 bg-[url("/background.jpg")] bg-cover bg-center px-4 py-6 shadow-xl sm:p-8 md:px-16 lg:px-24 xl:px-32'>
+    <div className="p-4">
+      <header className='relative rounded-lg border-b-2 bg-[url("/background.jpg")] bg-cover bg-center px-4 py-6 shadow-xl sm:p-8 md:px-16 lg:px-24 xl:px-24'>
         <div className="absolute inset-0 rounded-lg bg-black/70 dark:bg-white/70"></div>
         <div className="relative z-10">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-0">
