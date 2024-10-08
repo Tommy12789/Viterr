@@ -3,7 +3,7 @@
 import * as React from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, MapPin, Circle } from "lucide-react";
 import { useDebounce } from "use-debounce";
 
 import { cn } from "@/lib/utils";
@@ -170,6 +170,7 @@ export function SearchForm() {
           focusedInput === "departure" && "z-10",
         )}
       >
+        <Circle className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-500 dark:text-zinc-400" />
         <Input
           ref={departureRef}
           placeholder="D'où partez-vous ?"
@@ -221,6 +222,7 @@ export function SearchForm() {
           focusedInput === "destination" && "z-10",
         )}
       >
+        <MapPin className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-500 dark:text-zinc-400" />
         <Input
           ref={destinationRef}
           placeholder="Où allez-vous ?"
