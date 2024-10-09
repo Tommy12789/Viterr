@@ -3,7 +3,7 @@
 import * as React from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar as CalendarIcon, MapPin, Circle } from "lucide-react";
+import { Calendar as CalendarIcon, MapPin, Circle, X } from "lucide-react";
 import { useDebounce } from "use-debounce";
 
 import { cn } from "@/lib/utils";
@@ -28,6 +28,10 @@ export function SearchForm() {
   >(null);
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
   const calendarRef = React.useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [activeModal, setActiveModal] = React.useState<
+    "departure" | "destination" | "calendar" | null
+  >(null);
 
   const [debouncedDeparture] = useDebounce(departure, 300);
   const [debouncedDestination] = useDebounce(destination, 300);
@@ -151,103 +155,64 @@ export function SearchForm() {
     };
   }, []);
 
-  // Ajoutez cette nouvelle fonction pour gérer la soumission du formulaire
+  const handleModalOpen = (type: "departure" | "destination" | "calendar") => {
+    setIsModalOpen(true);
+    setActiveModal(type);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setActiveModal(null);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Ajoutez ici la logique pour traiter la recherche
     console.log("Recherche soumise :", { departure, destination, date });
   };
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit} // Ajoutez cet gestionnaire d'événements
-      className="mx-auto mt-8 flex w-full max-w-7xl flex-col items-center justify-center rounded-3xl bg-zinc-50/70 shadow-lg dark:bg-zinc-800/70 lg:mt-24 lg:h-20 lg:flex-row lg:rounded-full"
-    >
-      <div
-        className={cn(
-          "relative h-full flex-1",
-          focusedInput === "departure" && "z-10",
-        )}
+    <>
+      {/* Version pour grands écrans */}
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        className="mx-auto mt-8 hidden w-full max-w-7xl flex-col items-center justify-center rounded-3xl bg-zinc-50/70 shadow-lg dark:bg-zinc-800/70 lg:mt-24 lg:flex lg:h-20 lg:flex-row lg:rounded-full"
       >
-        <Circle className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-500 dark:text-zinc-400" />
-        <Input
-          ref={departureRef}
-          placeholder="D'où partez-vous ?"
+        <div
           className={cn(
-            "w-full rounded-full border-0 border-zinc-900/30 pl-12 text-base font-medium text-zinc-900 shadow-none placeholder:font-light placeholder:text-zinc-900 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 dark:placeholder:text-zinc-50 lg:h-full lg:flex-1 lg:rounded-none lg:rounded-l-full lg:border-r-2",
-            focusedInput === "departure" &&
-              "rounded-t-[20px] bg-white dark:bg-zinc-900 lg:rounded-l-none lg:border-r-0",
+            "relative h-full flex-1 transition-all duration-300 ease-in-out",
+            focusedInput === "departure" ? "lg:flex-[2]" : "lg:flex-1",
+            focusedInput === "departure" && "z-10",
           )}
-          value={departure}
-          onChange={(e) => handleInputChange(e, setDeparture)}
-          onKeyDown={(e) =>
-            handleKeyDown(
-              e,
-              departureSuggestions,
-              setDeparture,
-              setDepartureSuggestions,
-            )
-          }
-          onFocus={() => handleFocus("departure")}
-          onBlur={() => handleBlur("departure")}
-        />
-        {focusedInput === "departure" && departureSuggestions.length > 0 && (
-          <ul className="absolute z-10 max-h-60 w-full overflow-auto rounded-b-xl bg-white shadow-lg dark:bg-zinc-900">
-            {departureSuggestions.map((suggestion, index) => (
-              <li
-                key={suggestion.code}
-                className={cn(
-                  "cursor-pointer px-12 py-4 text-base font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800",
-                  index === selectedIndex && "bg-zinc-100 dark:bg-zinc-800",
-                )}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  handleSuggestionSelect(
-                    suggestion,
-                    setDeparture,
-                    setDepartureSuggestions,
-                  );
-                }}
-              >
-                {suggestion.nom} ({suggestion.codeDepartement})
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div
-        className={cn(
-          "relative h-full flex-1",
-          focusedInput === "destination" && "z-10",
-        )}
-      >
-        <MapPin className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-500 dark:text-zinc-400" />
-        <Input
-          ref={destinationRef}
-          placeholder="Où allez-vous ?"
-          className={cn(
-            "w-full rounded-full border-0 border-zinc-900/30 pl-12 text-base font-medium text-zinc-900 shadow-none placeholder:font-light placeholder:text-zinc-900 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 dark:placeholder:text-zinc-50 lg:h-full lg:flex-1 lg:rounded-none lg:border-r-2",
-            focusedInput === "destination" &&
-              "rounded-t-[20px] bg-white dark:bg-zinc-900 lg:border-r-0",
-          )}
-          value={destination}
-          onChange={(e) => handleInputChange(e, setDestination)}
-          onKeyDown={(e) =>
-            handleKeyDown(
-              e,
-              destinationSuggestions,
-              setDestination,
-              setDestinationSuggestions,
-            )
-          }
-          onFocus={() => handleFocus("destination")}
-          onBlur={() => handleBlur("destination")}
-        />
-        {focusedInput === "destination" &&
-          destinationSuggestions.length > 0 && (
+        >
+          <Circle className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-500 dark:text-zinc-400" />
+          <Input
+            ref={departureRef}
+            placeholder="D'où partez-vous ?"
+            className={cn(
+              "w-full rounded-full border-0 border-zinc-900/30 pl-12 text-base font-medium text-zinc-900 shadow-none placeholder:font-light placeholder:text-zinc-900 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 dark:placeholder:text-zinc-50 lg:h-full lg:flex-1 lg:rounded-none lg:rounded-l-full lg:border-r-2",
+              focusedInput === "departure" &&
+                "bg-white dark:bg-zinc-900 lg:rounded-b-none lg:rounded-t-lg lg:border-r-0",
+              focusedInput === "departure" &&
+                departureSuggestions.length === 0 &&
+                "lg:rounded-b-lg",
+            )}
+            value={departure}
+            onChange={(e) => handleInputChange(e, setDeparture)}
+            onKeyDown={(e) =>
+              handleKeyDown(
+                e,
+                departureSuggestions,
+                setDeparture,
+                setDepartureSuggestions,
+              )
+            }
+            onFocus={() => handleFocus("departure")}
+            onBlur={() => handleBlur("departure")}
+          />
+          {focusedInput === "departure" && departureSuggestions.length > 0 && (
             <ul className="absolute z-10 max-h-60 w-full overflow-auto rounded-b-xl bg-white shadow-lg dark:bg-zinc-900">
-              {destinationSuggestions.map((suggestion, index) => (
+              {departureSuggestions.map((suggestion, index) => (
                 <li
                   key={suggestion.code}
                   className={cn(
@@ -258,8 +223,8 @@ export function SearchForm() {
                     e.preventDefault();
                     handleSuggestionSelect(
                       suggestion,
-                      setDestination,
-                      setDestinationSuggestions,
+                      setDeparture,
+                      setDepartureSuggestions,
                     );
                   }}
                 >
@@ -268,53 +233,247 @@ export function SearchForm() {
               ))}
             </ul>
           )}
-      </div>
-      <div className={cn("relative h-full flex-1", isCalendarOpen && "z-10")}>
-        <Button
-          ref={dateInputRef}
-          type="button"
-          variant="ghost"
-          onClick={handleDateClick}
-          onBlur={handleDateBlur}
+        </div>
+        <div
           className={cn(
-            "w-full justify-start rounded-full border-zinc-900/30 pl-6 text-left text-base font-medium text-zinc-900 hover:bg-transparent hover:text-zinc-700 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 lg:h-full lg:flex-1 lg:rounded-none",
-            !date && "font-light",
-            isCalendarOpen &&
-              "hover:bg-zinc-white rounded-t-[20px] bg-white dark:bg-zinc-900",
+            "relative h-full flex-1 transition-all duration-300 ease-in-out",
+            focusedInput === "destination" ? "lg:flex-[2]" : "lg:flex-1",
+            focusedInput === "destination" && "z-10",
           )}
         >
-          <CalendarIcon className="mr-4 size-4 text-zinc-900 dark:text-zinc-50" />
-          {date ? (
-            format(date, "dd MMMM yyyy", { locale: fr })
-          ) : (
-            <span>Départ</span>
+          <MapPin className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-zinc-500 dark:text-zinc-400" />
+          <Input
+            ref={destinationRef}
+            placeholder="Où allez-vous ?"
+            className={cn(
+              "w-full rounded-full border-0 border-zinc-900/30 pl-12 text-base font-medium text-zinc-900 shadow-none placeholder:font-light placeholder:text-zinc-900 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 dark:placeholder:text-zinc-50 lg:h-full lg:flex-1 lg:rounded-none lg:border-r-2",
+              focusedInput === "destination" &&
+                "bg-white dark:bg-zinc-900 lg:rounded-b-none lg:rounded-t-lg lg:border-r-0",
+              focusedInput === "destination" &&
+                destinationSuggestions.length === 0 &&
+                "lg:rounded-b-lg",
+            )}
+            value={destination}
+            onChange={(e) => handleInputChange(e, setDestination)}
+            onKeyDown={(e) =>
+              handleKeyDown(
+                e,
+                destinationSuggestions,
+                setDestination,
+                setDestinationSuggestions,
+              )
+            }
+            onFocus={() => handleFocus("destination")}
+            onBlur={() => handleBlur("destination")}
+          />
+          {focusedInput === "destination" &&
+            destinationSuggestions.length > 0 && (
+              <ul className="absolute z-10 max-h-60 w-full overflow-auto rounded-b-xl bg-white shadow-lg dark:bg-zinc-900">
+                {destinationSuggestions.map((suggestion, index) => (
+                  <li
+                    key={suggestion.code}
+                    className={cn(
+                      "cursor-pointer px-12 py-4 text-base font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800",
+                      index === selectedIndex && "bg-zinc-100 dark:bg-zinc-800",
+                    )}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleSuggestionSelect(
+                        suggestion,
+                        setDestination,
+                        setDestinationSuggestions,
+                      );
+                    }}
+                  >
+                    {suggestion.nom} ({suggestion.codeDepartement})
+                  </li>
+                ))}
+              </ul>
+            )}
+        </div>
+        <div
+          className={cn(
+            "relative h-full flex-1 transition-all duration-300 ease-in-out",
+            isCalendarOpen ? "lg:flex-[2]" : "lg:flex-1",
+            isCalendarOpen && "z-10",
           )}
-        </Button>
-        {isCalendarOpen && (
-          <div
-            ref={calendarRef}
-            className="absolute z-10 w-full overflow-auto rounded-b-xl bg-white shadow-lg dark:bg-zinc-900"
+        >
+          <Button
+            ref={dateInputRef}
+            type="button"
+            variant="ghost"
+            onClick={handleDateClick}
+            onBlur={handleDateBlur}
+            className={cn(
+              "w-full justify-start rounded-full border-zinc-900/30 pl-6 text-left text-base font-medium text-zinc-900 hover:bg-transparent hover:text-zinc-700 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 lg:h-full lg:flex-1 lg:rounded-none",
+              !date && "font-light",
+              isCalendarOpen &&
+                "hover:bg-zinc-white bg-white dark:bg-zinc-900 lg:rounded-t-lg",
+            )}
           >
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(newDate) => {
-                setDate(newDate);
-                setIsCalendarOpen(false);
-              }}
-              initialFocus
-              variant="fullWidth"
-            />
-          </div>
-        )}
-      </div>
-      <Button
-        type="submit" // Changez le type en "submit"
-        variant={"outline"}
-        className="ml-2 w-full rounded-full border-none bg-zinc-200 text-base font-semibold text-zinc-900 shadow-md transition-colors hover:bg-white focus:outline-none focus:ring-0 dark:bg-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900 lg:mr-3 lg:h-3/4 lg:w-auto lg:px-6"
+            <CalendarIcon className="mr-4 size-4 text-zinc-900 dark:text-zinc-50" />
+            {date ? (
+              format(date, "dd MMMM yyyy", { locale: fr })
+            ) : (
+              <span>Départ</span>
+            )}
+          </Button>
+          {isCalendarOpen && (
+            <div
+              ref={calendarRef}
+              className="absolute z-10 w-full overflow-auto rounded-b-xl bg-white shadow-lg dark:bg-zinc-900"
+            >
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(newDate) => {
+                  setDate(newDate);
+                  setIsCalendarOpen(false);
+                }}
+                initialFocus
+                variant="fullWidth"
+              />
+            </div>
+          )}
+        </div>
+        <Button
+          type="submit"
+          variant={"outline"}
+          className="ml-2 w-full rounded-full border-none bg-zinc-200 text-base font-semibold text-zinc-900 shadow-md transition-colors hover:bg-white focus:outline-none focus:ring-0 dark:bg-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900 lg:mr-3 lg:h-3/4 lg:w-auto lg:px-6"
+        >
+          Rechercher
+        </Button>
+      </form>
+
+      {/* Version pour petits et moyens écrans */}
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto mt-8 flex w-full max-w-xl flex-col items-center justify-center space-y-4 rounded-3xl bg-zinc-50/70 p-4 shadow-lg dark:bg-zinc-800/70 lg:hidden"
       >
-        Rechercher
-      </Button>
-    </form>
+        <div className="flex w-full space-x-2 border-b border-zinc-200 pb-4 dark:border-zinc-700">
+          <div className="flex-1 border-r border-zinc-200 pr-2 dark:border-zinc-700">
+            <Button
+              variant="ghost"
+              className="w-full flex-1 justify-start bg-transparent"
+              onClick={() => handleModalOpen("departure")}
+            >
+              <Circle className="mr-2 size-4" />
+              {departure || "Départ"}
+            </Button>
+          </div>
+          <div className="flex-1 pl-2">
+            <Button
+              variant="ghost"
+              className="w-full flex-1 justify-start"
+              onClick={() => handleModalOpen("destination")}
+            >
+              <MapPin className="mr-2 size-4" />
+              {destination || "Arrivée"}
+            </Button>
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          className="w-full items-center justify-center"
+          onClick={() => handleModalOpen("calendar")}
+        >
+          <CalendarIcon className="mr-2 size-4" />
+          {date
+            ? format(date, "dd MMMM yyyy", { locale: fr })
+            : "Date de départ"}
+        </Button>
+        <Button type="submit" className="w-full">
+          Rechercher
+        </Button>
+      </form>
+
+      {/* Modal pour l'autocomplete et le calendrier */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-full max-w-md rounded-lg bg-white shadow-lg dark:bg-zinc-800">
+            <div className="flex items-center justify-between border-b border-zinc-200 p-4 dark:border-zinc-700">
+              <h2 className="text-lg font-semibold">
+                {activeModal === "departure"
+                  ? "D'où partez-vous ?"
+                  : activeModal === "destination"
+                    ? "Où allez-vous ?"
+                    : "Date de départ"}
+              </h2>
+              <Button variant="ghost" onClick={handleModalClose}>
+                <X className="size-6" />
+              </Button>
+            </div>
+            <div className="p-4">
+              {activeModal === "calendar" ? (
+                <div className="w-full">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(newDate) => {
+                      setDate(newDate);
+                      handleModalClose();
+                    }}
+                    initialFocus
+                    className="w-full"
+                  />
+                </div>
+              ) : (
+                <>
+                  <Input
+                    placeholder={
+                      activeModal === "departure"
+                        ? "D'où partez-vous ?"
+                        : "Où allez-vous ?"
+                    }
+                    value={
+                      activeModal === "departure" ? departure : destination
+                    }
+                    onChange={(e) =>
+                      handleInputChange(
+                        e,
+                        activeModal === "departure"
+                          ? setDeparture
+                          : setDestination,
+                      )
+                    }
+                    className="mb-4 w-full"
+                    autoFocus
+                  />
+                  <ul className="max-h-60 overflow-auto">
+                    {(activeModal === "departure"
+                      ? departureSuggestions
+                      : destinationSuggestions
+                    ).map((suggestion, index) => (
+                      <li
+                        key={suggestion.code}
+                        className={cn(
+                          "cursor-pointer px-4 py-2 text-base font-medium text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-700",
+                          index === selectedIndex &&
+                            "bg-zinc-100 dark:bg-zinc-700",
+                        )}
+                        onClick={() => {
+                          handleSuggestionSelect(
+                            suggestion,
+                            activeModal === "departure"
+                              ? setDeparture
+                              : setDestination,
+                            activeModal === "departure"
+                              ? setDepartureSuggestions
+                              : setDestinationSuggestions,
+                          );
+                          handleModalClose();
+                        }}
+                      >
+                        {suggestion.nom} ({suggestion.codeDepartement})
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

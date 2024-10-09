@@ -26,18 +26,6 @@ const Header = () => {
               </Link>
             </div>
 
-            <nav className="flex w-full flex-wrap justify-center space-x-4 rounded-full bg-zinc-100/50 px-4 py-2 shadow-inner dark:bg-zinc-800/50 sm:w-auto sm:justify-end sm:space-x-6 sm:px-6 sm:py-3 md:space-x-8">
-              {["Home", "About", "Services", "Contact"].map((item) => (
-                <Link
-                  key={item}
-                  href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                  className="relative text-sm text-zinc-50 transition-all duration-200 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:scale-x-0 after:bg-zinc-50 after:transition-transform after:duration-200 hover:after:scale-x-100 dark:text-zinc-900 dark:after:bg-zinc-900"
-                >
-                  {item}
-                </Link>
-              ))}
-            </nav>
-
             <div className="mt-4 flex items-center gap-4 sm:mt-0">
               <ModeToggle />
               <Button
