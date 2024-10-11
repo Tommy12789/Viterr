@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "@/components/ui/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import ClientWrapper from "@/components/client-wrapper";
 
@@ -39,8 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ClientWrapper>
-            <Header />
-            <main className="p-4">{children}</main>
+            <main className="">{children}</main>
           </ClientWrapper>
         </ThemeProvider>
       </body>

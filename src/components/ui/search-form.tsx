@@ -7,8 +7,8 @@ import { Calendar as CalendarIcon, MapPin, Circle, X } from "lucide-react";
 import { useDebounce } from "use-debounce";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "./button";
+import { Calendar } from "./calendar";
 import { Input } from "@/components/ui/input";
 import { searchCommunes, Commune } from "@/lib/api";
 

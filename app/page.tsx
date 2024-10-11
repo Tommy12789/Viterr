@@ -1,8 +1,10 @@
 import { FaLeaf, FaClock, FaPiggyBank, FaGlobeAmericas } from "react-icons/fa";
+import Header from "@/components/ui/header";
 
 export default function Home() {
   return (
     <>
+      <Header />
       <div className="container mx-auto px-4 py-16">
         <section className="mb-16 text-center">
           <h2 className="mb-4 text-4xl font-bold text-zinc-800 dark:text-zinc-100">
