@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "./button";
 import { ModeToggle } from "./mode-toggle";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { SearchForm } from "./search-form";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 import { Menu, House, FileText, Mail, Settings, User } from "lucide-react";
 
@@ -14,6 +17,8 @@ const transportModes = [
 ];
 
 const Header = () => {
+  const { data: session } = useSession(); // Récupérer l'état de la session
+
   return (
     <div className="p-4">
       <header className='relative rounded-lg border-b-2 bg-[url("/background.jpg")] bg-cover bg-center px-4 py-6 shadow-xl sm:p-8 md:px-16 lg:px-24 xl:px-24'>
@@ -28,13 +33,55 @@ const Header = () => {
 
             <div className="flex items-center gap-2 sm:gap-4">
               <ModeToggle />
-              <Button
-                variant="ghost"
-                className="text-zinc-50 hover:text-zinc-900 dark:text-zinc-900 dark:hover:text-zinc-50"
-                aria-label="Profile"
-              >
-                <User className="size-5" />
-              </Button>
+              {session?.user ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" className="rounded-full px-2 py-6">
+                      <img
+                        src={session.user.image || ""}
+                        alt="User profile"
+                        className="h-8 w-8 rounded-full"
+                      />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="p-2">
+                    <div className="flex flex-col items-center">
+                      <p className="text-sm">Bonjour, {session.user.name}</p>
+                      <Button
+                        variant="ghost"
+                        className="mt-4 "
+                        onClick={() => signOut()}
+                      >
+                        Déconnexion
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="text-zinc-50 hover:text-zinc-900 dark:text-zinc-900 dark:hover:text-zinc-50"
+                      aria-label="Profile"
+                    >
+                      <User className="size-5" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="">
+                    <div className="flex flex-col items-center">
+                      <Button
+                        variant="ghost"
+                        className="flex w-full items-center justify-start gap-2 px-4 py-6"
+                        onClick={() => signIn("google")}
+                      >
+                        <img src="/google.svg" className="size-5" alt="" />
+                        Se connecter avec google
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              )}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
