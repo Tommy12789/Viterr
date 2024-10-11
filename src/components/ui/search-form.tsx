@@ -192,7 +192,7 @@ export function SearchForm() {
             className={cn(
               "w-full rounded-full border-0 border-zinc-900/30 pl-12 text-base font-medium text-zinc-900 shadow-none placeholder:font-light placeholder:text-zinc-900 focus:outline-none focus:ring-0 dark:border-zinc-50/30 dark:text-zinc-50 dark:placeholder:text-zinc-50 lg:h-full lg:flex-1 lg:rounded-none lg:rounded-l-full lg:border-r-2",
               focusedInput === "departure" &&
-                "bg-white dark:bg-zinc-900 lg:rounded-b-none lg:rounded-t-lg lg:border-r-0",
+                "bg-white dark:bg-zinc-900 lg:rounded-none lg:rounded-t-lg lg:border-r-0",
               focusedInput === "departure" &&
                 departureSuggestions.length === 0 &&
                 "lg:rounded-b-lg",
@@ -331,7 +331,6 @@ export function SearchForm() {
                   setIsCalendarOpen(false);
                 }}
                 initialFocus
-                variant="fullWidth"
               />
             </div>
           )}
