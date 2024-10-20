@@ -1,13 +1,18 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
 const OPENCAGE_API_KEY = process.env.OPENCAGE_API_KEY;
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const { cityName } = req.query;
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const cityName = searchParams.get("cityName");
+
+  if (!cityName) {
+    return NextResponse.json(
+      { error: "cityName query parameter is missing" },
+      { status: 400 },
+    );
+  }
 
   try {
     const response = await axios.get(
@@ -22,13 +27,17 @@ export default async function handler(
 
     if (response.data.results.length > 0) {
       const { lat, lng } = response.data.results[0].geometry;
-      res.status(200).json({ lat, lng });
+      return NextResponse.json({ lat, lng });
     } else {
-      res.status(404).json({ error: "Aucune donnée trouvée pour la ville" });
+      return NextResponse.json(
+        { error: "Aucune donnée trouvée pour la ville" },
+        { status: 404 },
+      );
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la récupération des coordonnées" });
+    return NextResponse.json(
+      { error: "Erreur lors de la récupération des coordonnées" },
+      { status: 500 },
+    );
   }
 }
