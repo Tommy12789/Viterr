@@ -33,7 +33,7 @@ interface TransportOption {
   segments?: TransportOption[];
 }
 
-export default function ResultsPage() {
+export function ResultsPage() {
   const { theme, setTheme } = useTheme();
   const [selected, setSelected] = useState<number>(0);
   const [directionsResponses, setDirectionsResponses] = useState<
@@ -278,148 +278,147 @@ export default function ResultsPage() {
   };
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="h-screen overflow-hidden">
-        <Header />
-        <div className="px-4">
-          <div className="rounded-md bg-zinc-100 shadow-lg dark:bg-zinc-800">
-            <div className="rounded-t-md bg-zinc-50 px-4 py-4 text-center text-xl shadow-md dark:bg-zinc-800">
-              <div className="flex w-1/2 gap-4">
-                <Input
-                  className="bg-zinc-200 dark:bg-zinc-800"
-                  type="text"
-                  defaultValue={startCity}
-                ></Input>
-                <div className="w-28">
-                  <Button
-                    onClick={handleInvertCities}
-                    className="border-zinc-500 bg-zinc-200 p-2 hover:border hover:bg-zinc-300 dark:border-zinc-900 dark:bg-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-                    variant={"ghost"}
-                  >
-                    <ArrowLeftRight />
-                  </Button>
-                </div>
-                <Input
-                  className="bg-zinc-200 dark:bg-zinc-800"
-                  type="text"
-                  defaultValue={endCity}
-                ></Input>
+    <div className="h-screen overflow-hidden">
+      <Header />
+      <div className="px-4">
+        <div className="rounded-md bg-zinc-100 shadow-lg dark:bg-zinc-800">
+          <div className="rounded-t-md bg-zinc-50 px-4 py-4 text-center text-xl shadow-md dark:bg-zinc-800">
+            <div className="flex w-1/2 gap-4">
+              <Input
+                className="bg-zinc-200 dark:bg-zinc-800"
+                type="text"
+                defaultValue={startCity}
+              ></Input>
+              <div className="w-28">
+                <Button
+                  onClick={handleInvertCities}
+                  className="border-zinc-500 bg-zinc-200 p-2 hover:border hover:bg-zinc-300 dark:border-zinc-900 dark:bg-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+                  variant={"ghost"}
+                >
+                  <ArrowLeftRight />
+                </Button>
               </div>
+              <Input
+                className="bg-zinc-200 dark:bg-zinc-800"
+                type="text"
+                defaultValue={endCity}
+              ></Input>
             </div>
-            <div className="flex">
-              <ul className="flex h-[calc(100vh-14.5rem)] w-1/3 flex-col gap-2 overflow-y-auto rounded-bl-md p-4 dark:bg-zinc-700">
-                {results.length > 0 ? (
-                  results.map((result, index) => (
-                    <li
-                      key={index}
-                      onClick={() => setSelected(index)}
-                      className={cn(
-                        "dark-shadow-zinc-50 cursor-pointer rounded-lg px-6 py-6 shadow-md hover:bg-zinc-200 dark:bg-zinc-950 dark:text-white dark:hover:bg-zinc-800",
-                        {
-                          "bg-zinc-200 text-zinc-900 dark:bg-zinc-800":
-                            index === selected,
-                          "bg-zinc-50 text-zinc-800": index !== selected,
-                        },
-                      )}
-                    >
-                      {result.segments ? (
-                        <>
-                          {" "}
-                          <div className="mb-4 flex flex-row font-semibold">
+          </div>
+          <div className="flex">
+            <ul className="flex h-[calc(100vh-14.5rem)] w-1/3 flex-col gap-2 overflow-y-auto rounded-bl-md p-4 dark:bg-zinc-700">
+              {results.length > 0 ? (
+                results.map((result, index) => (
+                  <li
+                    key={index}
+                    onClick={() => setSelected(index)}
+                    className={cn(
+                      "dark-shadow-zinc-50 cursor-pointer rounded-lg px-6 py-6 shadow-md hover:bg-zinc-200 dark:bg-zinc-950 dark:text-white dark:hover:bg-zinc-800",
+                      {
+                        "bg-zinc-200 text-zinc-900 dark:bg-zinc-800":
+                          index === selected,
+                        "bg-zinc-50 text-zinc-800": index !== selected,
+                      },
+                    )}
+                  >
+                    {result.segments ? (
+                      <>
+                        {" "}
+                        <div className="mb-4 flex flex-row font-semibold">
+                          {result.segments.map(
+                            (segment: TransportOption, i: number) =>
+                              i === 0
+                                ? `${segment.start} → ${segment.end}`
+                                : `, ${segment.start} → ${segment.end}`,
+                          )}{" "}
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="flex gap-3">
                             {result.segments.map(
                               (segment: TransportOption, i: number) =>
-                                i === 0
-                                  ? `${segment.start} → ${segment.end}`
-                                  : `, ${segment.start} → ${segment.end}`,
-                            )}{" "}
+                                segment.type === "train" ? (
+                                  <TrainFront />
+                                ) : segment.type === "flight" ? (
+                                  <Plane />
+                                ) : segment.type === "bus" ? (
+                                  <Bus />
+                                ) : (
+                                  <Car />
+                                ),
+                            )}
+                            <h3>
+                              {(result.duration / 60).toString().split(".")[0]}h{" "}
+                              {result.duration % 60}min
+                            </h3>
                           </div>
-                          <div className="flex justify-between">
-                            <div className="flex gap-3">
-                              {result.segments.map(
-                                (segment: TransportOption, i: number) =>
-                                  segment.type === "train" ? (
-                                    <TrainFront />
-                                  ) : segment.type === "flight" ? (
-                                    <Plane />
-                                  ) : segment.type === "bus" ? (
-                                    <Bus />
-                                  ) : (
-                                    <Car />
-                                  ),
-                              )}
-                              <h3>
-                                {
-                                  (result.duration / 60)
-                                    .toString()
-                                    .split(".")[0]
-                                }
-                                h {result.duration % 60}min
-                              </h3>
-                            </div>
-                            <h3>{result.price} €</h3>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex flex-col gap-3">
-                          <h2 className="font-semibold">
-                            {result.start} → {result.end}
-                          </h2>
-                          <div className="flex justify-between">
-                            <div className="flex gap-3">
-                              {result.type === "train" ? (
-                                <TrainFront />
-                              ) : result.type === "flight" ? (
-                                <Plane />
-                              ) : result.type === "bus" ? (
-                                <Bus />
-                              ) : (
-                                <Car />
-                              )}
-                              <h3>
-                                {
-                                  (result.duration / 60)
-                                    .toString()
-                                    .split(".")[0]
-                                }
-                                h{" "}
-                                {result.duration % 60 > 0 &&
-                                  (result.duration % 60) + "min"}
-                              </h3>
-                            </div>
-                            <h3>{result.price} €</h3>
-                          </div>
+                          <h3>{result.price} €</h3>
                         </div>
-                      )}
-                    </li>
-                  ))
-                ) : (
-                  <p>Aucun résultat trouvé.</p>
-                )}
-              </ul>
-              <div className="h-[calc(100vh-14.5rem)] w-2/3 bg-white text-center shadow-md">
-                <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY as string}>
-                  <GoogleMap
-                    mapContainerStyle={{ height: "100%", width: "100%" }}
-                    center={{ lat: 48.8566, lng: 2.3522 }}
-                    zoom={6}
-                    options={{
-                      fullscreenControl: false,
-                      styles: theme === "dark" ? mapStyles : undefined,
-                      controlSize: 24,
-                      streetViewControl: false,
-                      mapTypeControl: false,
-                    }}
-                  >
-                    {directionsResponses.map((directions, index) => (
-                      <DirectionsRenderer key={index} directions={directions} />
-                    ))}
-                  </GoogleMap>
-                </LoadScript>
-              </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col gap-3">
+                        <h2 className="font-semibold">
+                          {result.start} → {result.end}
+                        </h2>
+                        <div className="flex justify-between">
+                          <div className="flex gap-3">
+                            {result.type === "train" ? (
+                              <TrainFront />
+                            ) : result.type === "flight" ? (
+                              <Plane />
+                            ) : result.type === "bus" ? (
+                              <Bus />
+                            ) : (
+                              <Car />
+                            )}
+                            <h3>
+                              {(result.duration / 60).toString().split(".")[0]}h{" "}
+                              {result.duration % 60 > 0 &&
+                                (result.duration % 60) + "min"}
+                            </h3>
+                          </div>
+                          <h3>{result.price} €</h3>
+                        </div>
+                      </div>
+                    )}
+                  </li>
+                ))
+              ) : (
+                <p>Aucun résultat trouvé.</p>
+              )}
+            </ul>
+            <div className="h-[calc(100vh-14.5rem)] w-2/3 bg-white text-center shadow-md">
+              <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY as string}>
+                <GoogleMap
+                  mapContainerStyle={{ height: "100%", width: "100%" }}
+                  center={{ lat: 48.8566, lng: 2.3522 }}
+                  zoom={6}
+                  options={{
+                    fullscreenControl: false,
+                    styles: theme === "dark" ? mapStyles : undefined,
+                    controlSize: 24,
+                    streetViewControl: false,
+                    mapTypeControl: false,
+                  }}
+                >
+                  {directionsResponses.map((directions, index) => (
+                    <DirectionsRenderer key={index} directions={directions} />
+                  ))}
+                </GoogleMap>
+              </LoadScript>
             </div>
           </div>
         </div>
-      </div>{" "}
-    </Suspense>
+      </div>
+    </div>
   );
 }
+
+const Page = () => {
+  return (
+    <Suspense>
+      <ResultsPage />
+    </Suspense>
+  );
+};
+
+export default Page;
