@@ -15,7 +15,7 @@ export function ModeToggle() {
     <Button
       onClick={() => (theme === "dark" ? setTheme("light") : setTheme("dark"))}
       variant="ghost"
-      className="text-zinc-50 hover:text-zinc-900 dark:text-zinc-900 dark:hover:text-zinc-200"
+      className="text-zinc-900 hover:text-zinc-900 dark:text-zinc-50 dark:hover:text-zinc-200"
     >
       {theme === "dark" ? (
         <SunIcon className="size-5" />

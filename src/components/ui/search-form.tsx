@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { format } from "date-fns";
+import { areIntervalsOverlapping, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar as CalendarIcon, MapPin, Circle, X } from "lucide-react";
 import { useDebounce } from "use-debounce";
@@ -11,8 +11,11 @@ import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Input } from "@/components/ui/input";
 import { searchCommunes, Commune } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export function SearchForm() {
+  const router = useRouter();
+
   const [date, setDate] = React.useState<Date>();
   const [departure, setDeparture] = React.useState("");
   const [destination, setDestination] = React.useState("");
@@ -167,7 +170,16 @@ export function SearchForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Recherche soumise :", { departure, destination, date });
+
+    if (!departure || !destination || !date) {
+      alert("Veuillez remplir tous les champs");
+      return;
+    }
+
+    const formatedDate = format(date, "yyyy-MM-dd");
+    router.push(
+      `/results?startCity=${departure}&endCity=${destination}&date=${formatedDate}`,
+    );
   };
 
   return (
@@ -176,7 +188,7 @@ export function SearchForm() {
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="mx-auto mt-8 hidden w-full max-w-7xl flex-col items-center justify-center rounded-3xl bg-zinc-50/70 shadow-lg dark:bg-zinc-800/70 lg:mt-24 lg:flex lg:h-20 lg:flex-row lg:rounded-full"
+        className="mx-auto mt-8 hidden w-full max-w-7xl flex-col items-center justify-center rounded-3xl bg-zinc-50/85 shadow-lg dark:bg-zinc-800/85 lg:mt-24 lg:flex lg:h-20 lg:flex-row lg:rounded-full"
       >
         <div
           className={cn(
