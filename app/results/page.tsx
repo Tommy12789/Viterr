@@ -33,7 +33,7 @@ interface TransportOption {
   segments?: TransportOption[];
 }
 
-export function ResultsPage() {
+function ResultsPage() {
   const { theme, setTheme } = useTheme();
   const [selected, setSelected] = useState<number>(0);
   const [directionsResponses, setDirectionsResponses] = useState<
