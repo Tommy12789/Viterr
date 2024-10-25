@@ -364,6 +364,7 @@ export function SearchForm() {
         <div className="flex w-full space-x-2 border-b border-zinc-200 pb-4 dark:border-zinc-700">
           <div className="flex-1 border-r border-zinc-200 pr-2 dark:border-zinc-700">
             <Button
+              type="button"
               variant="ghost"
               className="w-full flex-1 justify-start bg-transparent"
               onClick={() => handleModalOpen("departure")}
@@ -374,6 +375,7 @@ export function SearchForm() {
           </div>
           <div className="flex-1 pl-2">
             <Button
+              type="button"
               variant="ghost"
               className="w-full flex-1 justify-start"
               onClick={() => handleModalOpen("destination")}
@@ -384,6 +386,7 @@ export function SearchForm() {
           </div>
         </div>
         <Button
+          type="button"
           variant="ghost"
           className="w-full items-center justify-center"
           onClick={() => handleModalOpen("calendar")}

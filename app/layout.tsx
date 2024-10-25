@@ -14,6 +14,11 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+const satoshi = localFont({
+  src: "./fonts/Satoshi-Regular.woff",
+  variable: "--font-satoshi",
+  weight: "100 900",
+});
 
 export const metadata: Metadata = {
   title: "Viterr",
@@ -29,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} size-full antialiased dark:bg-zinc-900`}
+        className={`${satoshi.variable} size-full antialiased dark:bg-zinc-900`}
       >
         <ThemeProvider
           attribute="class"

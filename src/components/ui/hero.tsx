@@ -159,7 +159,7 @@ const Hero = () => {
             {transportModes.map((mode) => (
               <div
                 key={mode.name}
-                className="flex flex-col overflow-hidden rounded-xl bg-zinc-50 py-4 text-zinc-700 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-zinc-700 dark:text-zinc-50 dark:shadow-zinc-600 sm:py-6"
+                className="flex flex-col overflow-hidden rounded-xl bg-zinc-50 py-4 text-zinc-700 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl dark:bg-zinc-800 dark:text-zinc-50 dark:shadow-zinc-600 sm:py-6"
               >
                 <h2 className="px-4 text-center text-2xl font-light sm:px-6 sm:text-3xl lg:px-8 lg:text-4xl">
                   {mode.name}
