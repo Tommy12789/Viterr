@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { areIntervalsOverlapping, format } from "date-fns";
+import { areIntervalsOverlapping, format, set } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar as CalendarIcon, MapPin, Circle, X } from "lucide-react";
 import { useDebounce } from "use-debounce";
 
 import { cn } from "@/lib/utils";
+import { Checkbox } from "./checkbox";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,10 @@ import { useRouter } from "next/navigation";
 export function SearchForm() {
   const router = useRouter();
 
+  const [isPlaneChecked, setIsPlaneChecked] = React.useState(true);
+  const [isTrainChecked, setIsTrainChecked] = React.useState(true);
+  const [isBusChecked, setIsBusChecked] = React.useState(true);
+  const [isCarChecked, setIsCarChecked] = React.useState(true);
   const [date, setDate] = React.useState<Date>();
   const [departure, setDeparture] = React.useState("");
   const [destination, setDestination] = React.useState("");
@@ -178,17 +183,47 @@ export function SearchForm() {
 
     const formatedDate = format(date, "yyyy-MM-dd");
     router.push(
-      `/results?startCity=${departure}&endCity=${destination}&date=${formatedDate}`,
+      `/results?startCity=${departure}&endCity=${destination}&date=${formatedDate}&plane=${isPlaneChecked}&train=${isTrainChecked}&bus=${isBusChecked}&car=${isCarChecked}`,
     );
   };
 
   return (
     <>
+      <div className="item-center mx-auto flex max-w-5xl justify-between max-lg:gap-3 max-md:flex-col lg:mt-24">
+        <div
+          onClick={() => setIsPlaneChecked(!isPlaneChecked)}
+          className="flex cursor-pointer items-center justify-center gap-3 rounded-full bg-zinc-50/85 px-4 py-2 shadow-lg dark:bg-zinc-800/85"
+        >
+          <h3>Avion</h3>
+          <Checkbox checked={isPlaneChecked} />
+        </div>
+        <div
+          onClick={() => setIsTrainChecked(!isTrainChecked)}
+          className="flex cursor-pointer items-center justify-center gap-3 rounded-full bg-zinc-50/85 px-4 py-2 shadow-lg dark:bg-zinc-800/85"
+        >
+          <h3>Train</h3>
+          <Checkbox checked={isTrainChecked} />
+        </div>
+        <div
+          onClick={() => setIsBusChecked(!isBusChecked)}
+          className="flex cursor-pointer items-center justify-center gap-3 rounded-full bg-zinc-50/85 px-4 py-2 shadow-lg dark:bg-zinc-800/85"
+        >
+          <h3>Bus</h3>
+          <Checkbox checked={isBusChecked} />
+        </div>
+        <div
+          onClick={() => setIsCarChecked(!isCarChecked)}
+          className="flex cursor-pointer items-center justify-center gap-3 rounded-full bg-zinc-50/85 px-4 py-2 shadow-lg dark:bg-zinc-800/85"
+        >
+          <h3>Covoiturage</h3>
+          <Checkbox checked={isCarChecked} />
+        </div>
+      </div>
       {/* Version pour grands écrans */}
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="mx-auto mt-8 hidden w-full max-w-7xl flex-col items-center justify-center rounded-3xl bg-zinc-50/85 shadow-lg dark:bg-zinc-800/85 lg:mt-24 lg:flex lg:h-20 lg:flex-row lg:rounded-full"
+        className="mx-auto mt-8 hidden w-full max-w-7xl flex-col items-center justify-center rounded-3xl bg-zinc-50/85 shadow-lg dark:bg-zinc-800/85 lg:flex lg:h-20 lg:flex-row lg:rounded-full"
       >
         <div
           className={cn(

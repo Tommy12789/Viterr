@@ -44,6 +44,10 @@ function ResultsPage() {
   const startCity = searchParams?.get("startCity") || "";
   const endCity = searchParams?.get("endCity") || "";
   const date = searchParams?.get("date") || "";
+  const plane = searchParams?.get("plane") || "";
+  const train = searchParams?.get("train") || "";
+  const bus = searchParams?.get("bus") || "";
+  const car = searchParams?.get("car") || "";
 
   const [results, setResults] = useState<TransportOption[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -153,7 +157,9 @@ function ResultsPage() {
 
   useEffect(() => {
     if (startCity && endCity && date) {
-      fetch(`/api/route?startCity=${startCity}&endCity=${endCity}&date=${date}`)
+      fetch(
+        `/api/route?startCity=${startCity}&endCity=${endCity}&date=${date}&plane=${plane}&train=${train}&bus=${bus}&car=${car}`,
+      )
         .then((response) => response.json())
         .then((data) => {
           if (data.error) {

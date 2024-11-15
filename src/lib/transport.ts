@@ -57,20 +57,25 @@ export async function getTransportOptionsWithHubs(
   startCity: string,
   endCity: string,
   date: Date,
+  flight: boolean,
+  train: boolean,
+  bus: boolean,
+  blablacar: boolean,
 ): Promise<TransportOption[]> {
   let options: TransportOption[] = [];
 
-  const blablacarOptions = await callBlablacarAPI(startCity, endCity, date);
-  const busOptions = await callBusAPI(startCity, endCity, date);
-  const trainOptions = await callTrainAPI(startCity, endCity, date);
-  const flightOptions = await callFlightAPI(startCity, endCity, date);
-
-  options.push(
-    ...blablacarOptions,
-    ...busOptions,
-    ...trainOptions,
-    ...flightOptions,
-  );
+  if (flight) {
+    options.push(...(await callFlightAPI(startCity, endCity, date)));
+  }
+  if (train) {
+    options.push(...(await callTrainAPI(startCity, endCity, date)));
+  }
+  if (bus) {
+    options.push(...(await callBusAPI(startCity, endCity, date)));
+  }
+  if (blablacar) {
+    options.push(...(await callBlablacarAPI(startCity, endCity, date)));
+  }
 
   for (const hub of hubs) {
     if (hub !== startCity && hub !== endCity) {
@@ -78,11 +83,19 @@ export async function getTransportOptionsWithHubs(
         startCity,
         hub,
         date,
+        flight,
+        train,
+        bus,
+        blablacar,
       );
       const fromHubOptions = await getTransportOptionsForHub(
         hub,
         endCity,
         date,
+        flight,
+        train,
+        bus,
+        blablacar,
       );
 
       toHubOptions.forEach((toHubOption) => {
@@ -104,20 +117,26 @@ export async function getFilteredTransportOptionsWithHubs(
   startCity: string,
   endCity: string,
   date: Date,
+  flight: boolean,
+  train: boolean,
+  bus: boolean,
+  blablacar: boolean,
 ): Promise<TransportOption[]> {
   let options: TransportOption[] = [];
 
-  const directOptions = [
-    ...(await callBlablacarAPI(startCity, endCity, date)),
-    ...(await callBusAPI(startCity, endCity, date)),
-    ...(await callTrainAPI(startCity, endCity, date)),
-    ...(await callFlightAPI(startCity, endCity, date)),
-  ];
+  if (flight) {
+    options.push(...(await callFlightAPI(startCity, endCity, date)));
+  }
+  if (train) {
+    options.push(...(await callTrainAPI(startCity, endCity, date)));
+  }
+  if (bus) {
+    options.push(...(await callBusAPI(startCity, endCity, date)));
+  }
+  if (blablacar) {
+    options.push(...(await callBlablacarAPI(startCity, endCity, date)));
+  }
 
-  // Ajout des options directes
-  options.push(...directOptions);
-
-  // Limite les correspondances à 1 ou 2 hubs maximum
   const maxCorrespondences = 2;
 
   for (const hub of hubs) {
@@ -126,11 +145,19 @@ export async function getFilteredTransportOptionsWithHubs(
         startCity,
         hub,
         date,
+        flight,
+        train,
+        bus,
+        blablacar,
       );
       const fromHubOptions = await getTransportOptionsForHub(
         hub,
         endCity,
         date,
+        flight,
+        train,
+        bus,
+        blablacar,
       );
 
       toHubOptions.forEach((toHubOption) => {
@@ -160,22 +187,25 @@ export async function getTransportOptionsForHub(
   startCity: string,
   hub: string,
   date: Date,
+  plane: boolean,
+  train: boolean,
+  bus: boolean,
+  blablacar: boolean,
 ): Promise<TransportOption[]> {
   let options: TransportOption[] = [];
 
-  const blablacarOptions = await callBlablacarAPI(startCity, hub, date);
-  const busOptions = await callBusAPI(startCity, hub, date);
-  const trainOptions = await callTrainAPI(startCity, hub, date);
-  const flightOptions = await callFlightAPI(startCity, hub, date);
-
-  options.push(
-    ...blablacarOptions,
-    ...busOptions,
-    ...trainOptions,
-    ...flightOptions,
-  );
-
-  console.log(`Options from ${startCity} to ${hub}:`, options);
+  if (plane) {
+    options.push(...(await callFlightAPI(startCity, hub, date)));
+  }
+  if (train) {
+    options.push(...(await callTrainAPI(startCity, hub, date)));
+  }
+  if (bus) {
+    options.push(...(await callBusAPI(startCity, hub, date)));
+  }
+  if (blablacar) {
+    options.push(...(await callBlablacarAPI(startCity, hub, date)));
+  }
 
   return options;
 }
